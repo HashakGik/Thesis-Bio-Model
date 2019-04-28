@@ -1,0 +1,177 @@
+// CSL formulae generated for PRISM model compiled from Bio-PEPA input file "GAMT deficiency" by
+// Bio-PEPA Workbench Version 1.0 "Charlie Mingus" [22nd-April-2009]
+
+// Constants:
+const double T; // time instant
+const int i; // number of molecules
+const int rew; // reward variable
+
+// Probability of there being i molecules of species SAM at time T?
+P=? [ true U[T,T] _SAM=i ]
+
+// What is the probability of reaching the maximum number of molecules of species SAM at time T?
+P=? [ true U[T,T] "_SAM_at_maximum" ]
+
+// What is the probability of having reached the maximum number of molecules of species SAM at time T or before?
+P=? [ true U<=T "_SAM_at_maximum" ]
+
+// Expected number of SAM molecules at time T?
+R{"_SAM"}=? [ I=T ]
+
+// Expected long-run number of SAM molecules?
+R{"_SAM"}=? [ S ]
+
+// Stability of species SAM in the steady-state?
+S=? [(_SAM >= (i - 1)) & (_SAM <= (i + 1)) ]
+
+// Probability of there being i molecules of species SAH at time T?
+P=? [ true U[T,T] _SAH=i ]
+
+// What is the probability of reaching the maximum number of molecules of species SAH at time T?
+P=? [ true U[T,T] "_SAH_at_maximum" ]
+
+// What is the probability of having reached the maximum number of molecules of species SAH at time T or before?
+P=? [ true U<=T "_SAH_at_maximum" ]
+
+// Expected number of SAH molecules at time T?
+R{"_SAH"}=? [ I=T ]
+
+// Expected long-run number of SAH molecules?
+R{"_SAH"}=? [ S ]
+
+// Stability of species SAH in the steady-state?
+S=? [(_SAH >= (i - 1)) & (_SAH <= (i + 1)) ]
+
+// Probability of there being i molecules of species GAA_INT at time T?
+P=? [ true U[T,T] _GAA_INT=i ]
+
+// What is the probability of reaching the maximum number of molecules of species GAA_INT at time T?
+P=? [ true U[T,T] "_GAA_INT_at_maximum" ]
+
+// What is the probability of having reached the maximum number of molecules of species GAA_INT at time T or before?
+P=? [ true U<=T "_GAA_INT_at_maximum" ]
+
+// Expected number of GAA_INT molecules at time T?
+R{"_GAA_INT"}=? [ I=T ]
+
+// Expected long-run number of GAA_INT molecules?
+R{"_GAA_INT"}=? [ S ]
+
+// Stability of species GAA_INT in the steady-state?
+S=? [(_GAA_INT >= (i - 1)) & (_GAA_INT <= (i + 1)) ]
+
+// Probability of there being i molecules of species GAA_EXT at time T?
+P=? [ true U[T,T] _GAA_EXT=i ]
+
+// What is the probability of reaching the maximum number of molecules of species GAA_EXT at time T?
+P=? [ true U[T,T] "_GAA_EXT_at_maximum" ]
+
+// What is the probability of having reached the maximum number of molecules of species GAA_EXT at time T or before?
+P=? [ true U<=T "_GAA_EXT_at_maximum" ]
+
+// Expected number of GAA_EXT molecules at time T?
+R{"_GAA_EXT"}=? [ I=T ]
+
+// Expected long-run number of GAA_EXT molecules?
+R{"_GAA_EXT"}=? [ S ]
+
+// Stability of species GAA_EXT in the steady-state?
+S=? [(_GAA_EXT >= (i - 1)) & (_GAA_EXT <= (i + 1)) ]
+
+// Probability of there being i molecules of species CR at time T?
+P=? [ true U[T,T] _CR=i ]
+
+// What is the probability of reaching the maximum number of molecules of species CR at time T?
+P=? [ true U[T,T] "_CR_at_maximum" ]
+
+// What is the probability of having reached the maximum number of molecules of species CR at time T or before?
+P=? [ true U<=T "_CR_at_maximum" ]
+
+// Expected number of CR molecules at time T?
+R{"_CR"}=? [ I=T ]
+
+// Expected long-run number of CR molecules?
+R{"_CR"}=? [ S ]
+
+// Stability of species CR in the steady-state?
+S=? [(_CR >= (i - 1)) & (_CR <= (i + 1)) ]
+
+
+// Expected value of model component _UM_SAM at time T?
+R{"_UM_SAM"}=? [ I=T ]
+
+// Expected long-run value of model component _UM_SAM?
+R{"_UM_SAM"}=? [ S ]
+
+// Expected value of model component _UM_SAH at time T?
+R{"_UM_SAH"}=? [ I=T ]
+
+// Expected long-run value of model component _UM_SAH?
+R{"_UM_SAH"}=? [ S ]
+
+// Expected value of model component _UM_GAA_INT at time T?
+R{"_UM_GAA_INT"}=? [ I=T ]
+
+// Expected long-run value of model component _UM_GAA_INT?
+R{"_UM_GAA_INT"}=? [ S ]
+
+// Expected value of model component _UM_GAA_EXT at time T?
+R{"_UM_GAA_EXT"}=? [ I=T ]
+
+// Expected long-run value of model component _UM_GAA_EXT?
+R{"_UM_GAA_EXT"}=? [ S ]
+
+// Expected value of model component _UM_CR at time T?
+R{"_UM_CR"}=? [ I=T ]
+
+// Expected long-run value of model component _UM_CR?
+R{"_UM_CR"}=? [ S ]
+
+// Expected value of model component rew at time T?
+R{"rew"}=? [ I=T ]
+
+// Expected long-run value of model component rew?
+R{"rew"}=? [ S ]
+
+// Expected number of occurrences of reaction sams at time T?
+R{"_sams"}=? [ C<=T ]
+
+// Expected number of occurrences of reaction gamt at time T?
+R{"_gamt"}=? [ C<=T ]
+
+// Expected number of occurrences of reaction uptake at time T?
+R{"_uptake"}=? [ C<=T ]
+
+
+// Is species SAM depleted?
+label "_SAM_depleted" = _SAM = 0;
+
+// Is species SAM at its maximum value?
+label "_SAM_at_maximum" = _SAM = MAX;
+
+// Is species SAH depleted?
+label "_SAH_depleted" = _SAH = 0;
+
+// Is species SAH at its maximum value?
+label "_SAH_at_maximum" = _SAH = MAX;
+
+// Is species GAA_INT depleted?
+label "_GAA_INT_depleted" = _GAA_INT = 0;
+
+// Is species GAA_INT at its maximum value?
+label "_GAA_INT_at_maximum" = _GAA_INT = MAX;
+
+// Is species GAA_EXT depleted?
+label "_GAA_EXT_depleted" = _GAA_EXT = 0;
+
+// Is species GAA_EXT at its maximum value?
+label "_GAA_EXT_at_maximum" = _GAA_EXT = MAX;
+
+// Is species CR depleted?
+label "_CR_depleted" = _CR = 0;
+
+// Is species CR at its maximum value?
+label "_CR_at_maximum" = _CR = MAX;
+
+
+// End CSL formulae model compiled from GAMT deficiency

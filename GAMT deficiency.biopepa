@@ -1,0 +1,58 @@
+%biopepa.simulation.stoptime: 1000
+%biopepa.independent.replications: 10
+%biopepa.report.simulations.every: 5
+%biopepa.show.all.replications: false
+%biopepa.keep.data.files: true
+%biopepa.generate.thumbnails: true
+%stochkit.opt.progress.interval: 1
+%biopepa.report.image.scale: 0.3
+%biopepa.report.title: Deficienza GAMT
+%biopepa.report.author: Luca Salvatore Lorello
+%biopepa.report.institute: Universita' degli Studi 'Carlo Bo' di Urbino
+
+sams = [((v_sams / (km_sams_atp + atp)) * met / (((ki_sams_sam * km_sams_atp + km_sams_met * atp) / (km_sams_atp + atp)) + met)) * hct * 10.0];
+gamt = [(v_gamt / (km_gamt_sam + SAM / 10.0) * GAA_INT / 10.0 / (((ki_gamt_sah * km_gamt_sam + km_gamt_gaa_int * SAM / 10.0) / (km_gamt_sam + SAM / 10.0)) + GAA_INT / 10.0)) * hct * 10.0];
+uptake = [0.02 * (GAA_EXT - GAA_INT) / 10.0 * hct * 10.0];
+
+// FINO A 30 MIN V UPTAKE = 0.02 (regressione lineare di wolfram, mentre 0.012 era fatta da excel)
+// La velocità sperimentale è stata interpolata nella retta y = 0.012x + 0.0581
+// MET fisio: 12 uM
+// MET da usare per la SAMS di E. coli: 20 uM
+// GAA_EXT fisio: 2.3 uM
+// GAA_EXT pato: fino a 50 uM
+// v_gamt: 0.015umol/min/ml -> 15 uM/min
+// v_sams eritrociti: 33pmol/min/ml -> 0.033 uM/min
+// v_sams E. coli: 2.2umol/min/mg * 0.05mg -> 20 uM/min
+// km_gamt_sam: 14.8 uM
+// km_gamt_gaa_int: 78 uM
+// ki_gamt_sah: 0.4 uM
+// km_sams_met eritr: 80 uM
+// km_sams_atp eritr: 2 uM
+// ki_sams_sam eritr: 2 uM
+// km_sams_met E. coli: 65-90 uM -> usare 75 uM
+// km_sams_atp E. coli: 0.073 mM -> 73 uM
+// ki_sams_sam E. coli: 0 uM, ma usare 35 uM per evitare saturazioni nella simulazione
+
+
+
+SAM = (sams, 1) >> SAM + (gamt, 1) << SAM ;// + (pgomt, 1) << SAM;
+SAH = (gamt, 1) >> SAH ;
+GAA_INT = (uptake, 1) >> GAA_INT + (gamt, 1) << GAA_INT;
+GAA_EXT = (uptake, 1) << GAA_EXT;
+CR = (gamt, 1) >> CR;
+
+
+// Vmax GAMT purificata = 0.13 - 0.14 umol / min / mg prot. Da moltiplicare per 1mg/ml o 5mg/ml (sperimentale) <- VALORI DIVERSI PER L'ALTRO ESPERIMENTO
+// Vmax PGOMT: 0.002umol/min/mg * 22mg/ml = 0.044uM/min (Sangduk Kim, S-AdenosylMethionine: Protein Carboxyl O-Methyltransferase 1984)
+// Vmax SAMS: 5.6pmol/min/ml = 0.0056 uM/min (Oden Clarke, S-Adenosyl-L-methionine from human erythrocytes: Role in the regulation of cellular S-adenosylmethionine levels 1983)
+// Vuptake: 9.16uM/min (calcolato su INCUBAZIONE_CON_13C2GAA_MARZO 2017_grafici.xlsx foglio 3)
+// Km uptake: 576 uM (calcolato su INCUBAZIONE_CON_13C2GAA_MARZO 2017_grafici.xlsx foglio 3)
+
+UM_SAM = [SAM / 10.0];
+UM_SAH = [SAH / 10.0];
+UM_GAA_INT = [GAA_INT / 10.0];
+UM_GAA_EXT = [GAA_EXT / 10.0];
+UM_CR = [CR / 10.0];
+
+(SAM <gamt> SAH <gamt> GAA_INT <gamt> CR) <uptake> GAA_EXT
+

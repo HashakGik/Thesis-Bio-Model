@@ -1,0 +1,170 @@
+// PRISM model compiled from Bio-PEPA input file "GAMT deficiency" by
+// Bio-PEPA Workbench Version 1.0 "Charlie Mingus" [22nd-April-2009]
+
+ctmc
+
+const double _met = 12;
+const double _atp = 1100;
+const double _v_sams = 0.033;
+const double _v_gamt = 0;
+const double _km_sams_atp = 80;
+const double _km_sams_met = 2;
+const double _ki_sams_sam = 2;
+const double _km_gamt_sam = 14.8;
+const double _km_gamt_gaa_int = 78;
+const double _ki_gamt_sah = 0.4;
+const double _hct = 1;
+
+module Rates
+
+  [_sams] ((((_v_sams / (_km_sams_atp + _atp)) * _met / (((_ki_sams_sam * _km_sams_atp + _km_sams_met * _atp) / (_km_sams_atp + _atp)) + _met)) * _hct * 10.0) > 0) -> (((_v_sams / (_km_sams_atp + _atp)) * _met / (((_ki_sams_sam * _km_sams_atp + _km_sams_met * _atp) / (_km_sams_atp + _atp)) + _met)) * _hct * 10.0) : true;
+  [_gamt] (((_v_gamt / (_km_gamt_sam + _SAM / 10.0) * _GAA_INT / 10.0 / (((_ki_gamt_sah * _km_gamt_sam + _km_gamt_gaa_int * _SAM / 10.0) / (_km_gamt_sam + _SAM / 10.0)) + _GAA_INT / 10.0)) * _hct * 10.0) > 0) -> ((_v_gamt / (_km_gamt_sam + _SAM / 10.0) * _GAA_INT / 10.0 / (((_ki_gamt_sah * _km_gamt_sam + _km_gamt_gaa_int * _SAM / 10.0) / (_km_gamt_sam + _SAM / 10.0)) + _GAA_INT / 10.0)) * _hct * 10.0) : true;
+  [_uptake] ((0.02 * (_GAA_EXT - _GAA_INT) / 10.0 * _hct * 10.0) > 0) -> (0.02 * (_GAA_EXT - _GAA_INT) / 10.0 * _hct * 10.0) : true;
+
+
+
+
+
+
+endmodule
+
+// Species: _SAM, _SAH, _GAA_INT, _GAA_EXT, _CR
+
+const int MAX = 35 + 13 + 598 + 1000 + 1;
+
+module _SAM
+
+  _SAM : [0..MAX] init 35;
+
+  [_sams] (_SAM + 1 <= MAX) -> 1 : (_SAM' = _SAM + 1);
+  [_gamt] (_SAM >= 1) -> 1 : (_SAM' = _SAM - 1);
+
+endmodule
+
+module _SAH
+
+  _SAH : [0..MAX] init 13;
+
+  [_gamt] (_SAH + 1 <= MAX) -> 1 : (_SAH' = _SAH + 1);
+
+endmodule
+
+module _GAA_INT
+
+  _GAA_INT : [0..MAX] init 598;
+
+  [_uptake] (_GAA_INT + 1 <= MAX) -> 1 : (_GAA_INT' = _GAA_INT + 1);
+  [_gamt] (_GAA_INT >= 1) -> 1 : (_GAA_INT' = _GAA_INT - 1);
+
+endmodule
+
+module _GAA_EXT
+
+  _GAA_EXT : [0..MAX] init 1000;
+
+  [_uptake] (_GAA_EXT + 0 <= MAX) -> 1 : (_GAA_EXT' = _GAA_EXT + 0);
+
+endmodule
+
+module _CR
+
+  _CR : [0..MAX] init 1;
+
+  [_gamt] (_CR + 1 <= MAX) -> 1 : (_CR' = _CR + 1);
+
+endmodule
+
+
+// count rewards: "number of occurrences of sams"
+rewards "_sams"
+  [_sams] true : 1;
+endrewards
+
+// count rewards: "number of occurrences of gamt"
+rewards "_gamt"
+  [_gamt] true : 1;
+endrewards
+
+// count rewards: "number of occurrences of uptake"
+rewards "_uptake"
+  [_uptake] true : 1;
+endrewards
+
+// rewards: "number of SAM molecules present"
+rewards "_SAM"
+  true : _SAM;
+endrewards
+
+// rewards: "square of number of SAM molecules present (used to calculate standard derivation)"
+rewards "_SAM_squared"
+  true : _SAM * _SAM;
+endrewards
+
+// rewards: "number of SAH molecules present"
+rewards "_SAH"
+  true : _SAH;
+endrewards
+
+// rewards: "square of number of SAH molecules present (used to calculate standard derivation)"
+rewards "_SAH_squared"
+  true : _SAH * _SAH;
+endrewards
+
+// rewards: "number of GAA_INT molecules present"
+rewards "_GAA_INT"
+  true : _GAA_INT;
+endrewards
+
+// rewards: "square of number of GAA_INT molecules present (used to calculate standard derivation)"
+rewards "_GAA_INT_squared"
+  true : _GAA_INT * _GAA_INT;
+endrewards
+
+// rewards: "number of GAA_EXT molecules present"
+rewards "_GAA_EXT"
+  true : _GAA_EXT;
+endrewards
+
+// rewards: "square of number of GAA_EXT molecules present (used to calculate standard derivation)"
+rewards "_GAA_EXT_squared"
+  true : _GAA_EXT * _GAA_EXT;
+endrewards
+
+// rewards: "number of CR molecules present"
+rewards "_CR"
+  true : _CR;
+endrewards
+
+// rewards: "square of number of CR molecules present (used to calculate standard derivation)"
+rewards "_CR_squared"
+  true : _CR * _CR;
+endrewards
+
+
+// Model component: UM_SAM = [SAM / 10.0]
+rewards "_UM_SAM"
+  true : (_SAM / 10.0);
+endrewards
+
+// Model component: UM_SAH = [SAH / 10.0]
+rewards "_UM_SAH"
+  true : (_SAH / 10.0);
+endrewards
+
+// Model component: UM_GAA_INT = [GAA_INT / 10.0]
+rewards "_UM_GAA_INT"
+  true : (_GAA_INT / 10.0);
+endrewards
+
+// Model component: UM_GAA_EXT = [GAA_EXT / 10.0]
+rewards "_UM_GAA_EXT"
+  true : (_GAA_EXT / 10.0);
+endrewards
+
+// Model component: UM_CR = [CR / 10.0]
+rewards "_UM_CR"
+  true : (_CR / 10.0);
+endrewards
+
+
+// End PRISM model compiled from GAMT deficiency
